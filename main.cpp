@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <gzstream.h>
+#include "libs/gzstream/gzstream.h"
 
 int main() {
 

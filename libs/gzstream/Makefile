@@ -83,6 +83,9 @@ clean :
 cleanall :
 	rm *.o libgzstream.a test_gzip test_gunzip
 
+cleanbuild : 
+	rm *.o libgzstream.a 
+
 # ============================================================================
 # EOF
 
