@@ -10,10 +10,12 @@ set(ZLIB_SHARED ${LIBS_OUT_DIR}/libz.so)
 
 add_custom_command(
     OUTPUT ${ZLIB_STATIC} ${ZLIB_SHARED}
-    COMMAND [ -d "build" ] && rm -r "build"
-    COMMAND mkdir build && cd build && cmake .. && make 
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${ZLIB_SRC_DIR}/build ${LIBS_OUT_DIR}
-    COMMAND rm -rf build 
+    COMMAND ${CMAKE_COMMAND} -E rm -rf build
+    COMMAND ${CMAKE_COMMAND} -E make_directory build
+    COMMAND ${CMAKE_COMMAND} -E chdir build ${CMAKE_COMMAND} ..
+    COMMAND ${CMAKE_COMMAND} --build build
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different build/libz.a ${ZLIB_STATIC}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different build/libz.so ${ZLIB_SHARED}
     WORKING_DIRECTORY ${ZLIB_SRC_DIR}
     COMMENT "Compiling zlib library"
 )
