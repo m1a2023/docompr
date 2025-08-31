@@ -1,8 +1,11 @@
 #include <iostream>
 #include <string>
 #include "libs/gzstream/gzstream.h"
+#include "protos/file.grpc.pb.h"
+#include "protos/file.pb.h"
+
+#include <grpcpp/grpcpp.h>
 
 int main() {
-    gzstreambase s;
     return 0;
 }

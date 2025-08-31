@@ -34,3 +34,7 @@ target_link_libraries(${PROJECT_NAME}
 # Add grpc and protobuf
 #
 add_subdirectory(proto)
+
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE proto_client
+)
