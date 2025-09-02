@@ -58,5 +58,4 @@ add_custom_target(build_external_libs
     COMMENT "Building all external libs"
 )
 
-
-
+link_directories(${CMAKE_BINARY_DIR}/libs)

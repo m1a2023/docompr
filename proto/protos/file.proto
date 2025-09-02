@@ -3,14 +3,31 @@ syntax = "proto3";
 
 package compr;
 
-service FileSender {
-    rpc SayHello (HelloRequest) returns (HelloReply) {}
+
+message FileMeta {
+    string title = 1;
+    string path = 2;
+    string hash = 3;
 }
 
-message HelloRequest {
-    string name = 1;
+message FileChunk {
+    optional int32 offset = 1;
+    optional bytes data = 2;
 }
 
-message HelloReply {
-    string message = 1;
+message FileRequest {
+    oneof payload {
+        FileMeta meta = 1;
+        FileChunk chunk = 2;
+    }
+}
+
+message FileResponse {
+    int32 code = 1;
+    string message = 2;
+}
+
+service Compressor {
+    rpc CompressSmallFile(FileRequest) returns (FileResponse) {}
+    rpc CompressLargeFile(stream FileChunk) returns (FileResponse) {}
 }

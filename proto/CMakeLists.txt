@@ -1,7 +1,7 @@
 find_package(Protobuf CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 
-project(proto_client)
+project(proto)
 
 set(PROTO_FILES
     protos/file.proto
