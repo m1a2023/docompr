@@ -15,6 +15,11 @@ message FileChunk {
     optional bytes data = 2;
 }
 
+message SmallFileRequest {
+    FileMeta meta = 1;
+    FileChunk chunk = 2;
+}
+
 message FileRequest {
     oneof payload {
         FileMeta meta = 1;
@@ -28,6 +33,6 @@ message FileResponse {
 }
 
 service Compressor {
-    rpc CompressSmallFile(FileRequest) returns (FileResponse) {}
-    rpc CompressLargeFile(stream FileChunk) returns (FileResponse) {}
+    rpc CompressSmallFile(SmallFileRequest) returns (FileResponse) {}
+    rpc CompressLargeFile(stream FileRequest) returns (FileResponse) {}
 }
