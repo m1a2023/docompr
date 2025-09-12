@@ -15,8 +15,5 @@ public:
         const grpc::ServerReader<compr::FileRequest>* reader, compr::FileResponse* response);
 
 private:
-    void WriteFile(const compr::FileMeta& meta, const compr::FileChunk& chunk) const;	
 	bool Compress(const compr::FileMeta& meta, const compr::FileChunk& chunk) const;
-
-	inline ogzstream* open_file() const;
 };
