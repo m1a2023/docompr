@@ -24,7 +24,6 @@ add_custom_target(build_zlib
     DEPENDS ${ZLIB_STATIC} ${ZLIB_SHARED}
     COMMENT "Target compilation library"
 )
-
 add_library(z STATIC IMPORTED)
 set_target_properties(z PROPERTIES IMPORTED_LOCATION ${ZLIB_STATIC})
 
@@ -39,7 +38,7 @@ add_custom_command(
     COMMAND make
     COMMAND ${CMAKE_COMMAND} -E make_directory ${LIBS_OUT_DIR}
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GZSTREAM_STATIC_SRC} ${GZSTREAM_STATIC}
-    COMMAND make cleanbuild
+    COMMAND make build_static
     WORKING_DIRECTORY ${GZSTREAM_SRC_DIR}
     COMMENT "Compiling gzstream library"
 )
@@ -59,3 +58,4 @@ add_custom_target(build_external_libs
 )
 
 link_directories(${CMAKE_BINARY_DIR}/libs)
+

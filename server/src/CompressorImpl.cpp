@@ -1,4 +1,4 @@
-#include "Compressor.hpp"
+#include "CompressorImpl.hpp"
 
 
 grpc::Status Compressor::CompressSmallFile(grpc::ServerContext* context,

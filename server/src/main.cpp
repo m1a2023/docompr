@@ -6,15 +6,9 @@
 #include "protos/file.pb.h"
 #include <grpcpp/grpcpp.h>
 
-#include "Compressor.hpp"
+#include "CompressorImpl.hpp"
 
 int main(int argc, char* argv[]) {
-
-    std::cout << argc << std::endl;
-
-    for (auto i = 0; i < argc; i++) {
-        std::cout << argv[i] << std::endl;
-    }
 
     std::string addr{"0.0.0.0:50051"};
     Compressor compressor;

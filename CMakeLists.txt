@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(docompr)
+project(docompr 
+    VERSION 0.0.1 
+    DESCRIPTION "File compressor microservice for docshell"
+)
 
 set(CMAKE_CXX_STANDARD 17)
 

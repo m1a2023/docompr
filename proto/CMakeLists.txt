@@ -7,7 +7,7 @@ set(PROTO_FILES
     protos/file.proto
 )
 
-add_library(${PROJECT_NAME} ${PROTO_FILES})
+add_library(${PROJECT_NAME} SHARED ${PROTO_FILES})
 target_link_libraries(${PROJECT_NAME}
     PUBLIC 
         protobuf::libprotobuf

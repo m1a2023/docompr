@@ -1,6 +1,6 @@
 set(SERVER_SOURCES 
     src/main.cpp
-    src/Compressor.cpp
+    src/CompressorImpl.cpp
 )
 
 add_executable(server ${SERVER_SOURCES})

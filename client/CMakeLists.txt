@@ -1,3 +1,5 @@
+
+
 set(CLIENT_SOURCES 
     src/main.cpp
 )
@@ -9,8 +11,6 @@ add_dependencies(client build_external_libs)
 target_link_libraries(client
     PRIVATE 
         proto
-        gzstream
-        z
 )
 target_include_directories(client PUBLIC
     ${CMAKE_SOURCE_DIR}/src

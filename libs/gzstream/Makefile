@@ -83,9 +83,16 @@ clean :
 cleanall :
 	rm *.o libgzstream.a test_gzip test_gunzip
 
-cleanbuild : 
+build_static : 
 	rm *.o libgzstream.a 
 
+libgzstream.so : gzstream_shared.o
+	${CXX} ${CPPFLAGS} -fPIC -shared -o libgzstream.so gzstream.o ${LDFLAGS} 
+
+build_shared : libgzstream.so
+
+gzstream_shared.o : gzstream.C gzstream.h
+	${CXX} ${CPPFLAGS} -fPIC -c -o gzstream.o gzstream.C
 # ============================================================================
 # EOF
 
