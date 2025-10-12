@@ -1,36 +1,49 @@
 #include "CompressorImpl.hpp"
 
 
-grpc::Status Compressor::CompressSmallFile(grpc::ServerContext* context,
-    const compr::SmallFileRequest* request, compr::FileResponse* response) {
-    
+grpc::Status Compressor::CompressSmallFile(
+    grpc::ServerContext*            context,
+    const compr::SmallFileRequest*  request, 
+    compr::FileResponse*            response
+) {
     if (!Compress(request->meta(), request->chunk())) {
         response->set_code(500);
         response->set_message("Could not compress object");
+        
         return grpc::Status::CANCELLED;
     }   
 
     response->set_code(200);
-    auto msg = "Got file: " + request->meta().path() + request->meta().title();
-    response->set_message(msg);
+    response->set_message(
+        "Got file: " 
+        + request->meta().path() 
+        + request->meta().title()
+    );
+    
     return grpc::Status::OK;
 }
 
-bool Compressor::Compress(const compr::FileMeta& meta, const compr::FileChunk& chunk) const {
-    constexpr auto _SIZE = 8192; 
-    auto full_path = meta.path() + meta.title() + ".zip";
-    
-    try {
-        auto compress = ogzstream { full_path.c_str() };
+bool Compressor::Compress(
+    const compr::FileMeta&  meta, 
+    const compr::FileChunk& chunk
+) const {
+    using namespace compressor;
+    using namespace std;
 
-        for (auto i = 0; i < chunk.data().length(); i += _SIZE) {
-            auto data = chunk.data().substr(i, _SIZE);
-            compress.write(data.c_str(), _SIZE);
-        }
-    
-        compress.close();
-        return true;
-    } catch (std::exception) {
-        return false;
+    B2ZlibCompressor compr;
+
+    try {
+        string com = chunk.data();
+        const auto compressed = compr.compress(com);
+
+        auto new_title = "com_" + meta.title();
+        std::ofstream os{meta.path() + new_title};
+        os.seekp(chunk.offset());
+
+        os.write(compressed.data(), compressed.length());
+    } catch (const std::exception& e) {
+        cout << e.what() << endl;
     }
+
+    return true;
 }

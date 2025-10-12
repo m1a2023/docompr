@@ -5,6 +5,10 @@
 
 #include <string>
 
+#include "compressor/compressor.hpp"
+#include "compressor/pool/compressorPool.hpp"
+#include "compressor/pool/baseComrpessorPool.hpp"
+
 class Compressor final : public compr::Compressor::Service {
 
 public:

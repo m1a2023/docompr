@@ -1,0 +1,12 @@
+
+message(${CMAKE_CURRENT_SOURCE_DIR})
+set(MAIN_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/compressor/compressor.cpp
+)
+
+list(APPEND SERVER_SOURCES ${MAIN_SOURCES})
+set(SERVER_SOURCES ${SERVER_SOURCES} PARENT_SCOPE)
+
+add_subdirectory(
+    ${CMAKE_CURRENT_SOURCE_DIR}/compressor
+)

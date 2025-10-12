@@ -1,5 +1,10 @@
 set(LIBS_OUT_DIR ${CMAKE_BINARY_DIR}/libs)
 
+
+# ---------- Boost ---------
+cmake_policy(SET CMP0167 OLD)
+find_package(Boost REQUIRED COMPONENTS filesystem)
+
 # ---------- ZLIB ----------
 set(ZLIB_SRC_DIR ${CMAKE_SOURCE_DIR}/libs/zlib)
 set(ZLIB_STATIC_SRC ${ZLIB_SRC_DIR}/libz.a)
@@ -50,6 +55,7 @@ add_custom_target(build_gzstream
 
 add_library(gzstream STATIC IMPORTED)
 set_target_properties(gzstream PROPERTIES IMPORTED_LOCATION ${GZSTREAM_STATIC})
+
 
 # ---------- ALL ----------
 add_custom_target(build_external_libs

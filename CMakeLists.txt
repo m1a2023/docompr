@@ -5,8 +5,17 @@ project(docompr
     DESCRIPTION "File compressor microservice for docshell"
 )
 
+set(CMAKE_BUILD_TYPE "Debug")
 set(CMAKE_CXX_STANDARD 17)
 
+if (CMAKE_BUILD_TYPE STREQUAL "Debug") 
+    message(
+        "Building ${PROJECT_NAME}:
+            Version: ${PROJECT_VERSION};
+            Type: ${CMAKE_BUILD_TYPE};
+            CXX: ${CMAKE_CXX_STANDARD};"
+    )
+endif()
 
 #
 # Executable client

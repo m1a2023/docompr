@@ -16,11 +16,13 @@ message FileChunk {
 }
 
 message SmallFileRequest {
+    required string uuid;
     FileMeta meta = 1;
     FileChunk chunk = 2;
 }
 
 message FileRequest {
+    required string uuid;
     oneof payload {
         FileMeta meta = 1;
         FileChunk chunk = 2;
