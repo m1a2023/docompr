@@ -9,6 +9,8 @@
 #include "compressor/pool/compressorPool.hpp"
 #include "compressor/pool/baseComrpessorPool.hpp"
 
+#include "queue/RequestQueue.hpp"
+
 class Compressor final : public compr::Compressor::Service {
 
 public:
@@ -19,5 +21,7 @@ public:
         const grpc::ServerReader<compr::FileRequest>* reader, compr::FileResponse* response);
 
 private:
-	bool Compress(const compr::FileMeta& meta, const compr::FileChunk& chunk) const;
+	bool Compress(const std::string& uuid, 
+        std::unique_ptr<compr::FileMeta> meta, 
+        std::unique_ptr<compr::FileChunk> chunk) const;
 };

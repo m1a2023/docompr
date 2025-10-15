@@ -2,6 +2,7 @@
 message(${CMAKE_CURRENT_SOURCE_DIR})
 set(POOL_SOURCES 
     ${CMAKE_CURRENT_SOURCE_DIR}/pool/compressorPool.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/queue/RequestQueue.cpp
 )
 
 list(APPEND SERVER_SOURCES ${POOL_SOURCES})

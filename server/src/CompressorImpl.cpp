@@ -6,10 +6,12 @@ grpc::Status Compressor::CompressSmallFile(
     const compr::SmallFileRequest*  request, 
     compr::FileResponse*            response
 ) {
-    if (!Compress(request->meta(), request->chunk())) {
+    auto _meta = std::make_unique<compr::FileMeta>(request->meta());
+    auto _chunk = std::make_unique<compr::FileChunk>(request->chunk());
+
+    if (!Compress(request->uuid(), std::move(_meta), std::move(_chunk))) {
         response->set_code(500);
         response->set_message("Could not compress object");
-        
         return grpc::Status::CANCELLED;
     }   
 
@@ -24,26 +26,31 @@ grpc::Status Compressor::CompressSmallFile(
 }
 
 bool Compressor::Compress(
-    const compr::FileMeta&  meta, 
-    const compr::FileChunk& chunk
+    const std::string& uuid,
+    std::unique_ptr<compr::FileMeta> meta, 
+    std::unique_ptr<compr::FileChunk> chunk 
 ) const {
     using namespace compressor;
     using namespace std;
 
-    B2ZlibCompressor compr;
+    // B2ZlibCompressor compr;
+    // try {
+    //     string com = chunk.data();
+    //     const auto compressed = compr.compress(com);
 
-    try {
-        string com = chunk.data();
-        const auto compressed = compr.compress(com);
+    //     auto new_title = "com_" + meta.title();
+    //     std::ofstream os{meta.path() + new_title};
+    //     os.seekp(chunk.offset());
 
-        auto new_title = "com_" + meta.title();
-        std::ofstream os{meta.path() + new_title};
-        os.seekp(chunk.offset());
-
-        os.write(compressed.data(), compressed.length());
-    } catch (const std::exception& e) {
-        cout << e.what() << endl;
-    }
+    //     os.write(compressed.data(), compressed.length());
+    // } catch (const std::exception& e) {
+    //     cout << e.what() << endl;
+    // }
+   
+    auto req = make_unique<requests::PoorRequest>(
+        uuid, std::move(meta), std::move(chunk)
+    );
+    requests::RequestQueue::get_instance().push(std::move(req));
 
     return true;
 }

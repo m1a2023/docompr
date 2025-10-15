@@ -4,11 +4,11 @@ compressor::B2ZlibCompressor::B2ZlibCompressor()
 { 
     using namespace boost::iostreams;
 
-    params.level        = zlib::best_speed;
+    params.level        = zlib::best_compression;
     params.mem_level    = 8;
     params.method       = zlib::deflated;
     params.window_bits  = 15;
-    params.strategy     = zlib::deflated;
+    params.strategy     = zlib::default_strategy;
     params.noheader     = false;
 }
 

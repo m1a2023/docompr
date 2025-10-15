@@ -1,12 +1,20 @@
+#pragma once
+
 #include <queue>
 #include <string>
 #include <vector>
+#include <optional>
 
 #include "protos/file.pb.h"
 #include "protos/file.grpc.pb.h"
 
+#include "../observer/observer.hpp"
+
 namespace requests {
 
+/**
+ *  Type of request transfer information;
+ */
 enum class RequestType: int {
     META = 1,
     CHUNK,
@@ -16,60 +24,89 @@ enum class RequestType: int {
 inline constexpr RequestType
 operator^(RequestType a, RequestType b);
 
+
+/* 
+    In general a DTO object;
+    Smallest interpretation of request;
+*/
+class PoorRequest {
+public:
+    PoorRequest(
+        const std::string       &_uuid,
+        std::unique_ptr<compr::FileMeta>   _meta,
+        std::unique_ptr<compr::FileChunk>  _chunk
+    );
+    PoorRequest(
+        const std::string       &_uuid,
+        std::unique_ptr<compr::FileMeta>   _meta
+    );
+    PoorRequest(
+        const std::string       &_uuid,
+        std::unique_ptr<compr::FileChunk>  _chunk
+    );
+
+    RequestType       _type;
+    std::string       _uuid;
+    std::unique_ptr<compr::FileMeta>   _meta;
+    std::unique_ptr<compr::FileChunk>  _chunk;
+};
+
+
+/**
+ *  Object that represents general request,
+ * that will be processed in request queue; 
+ */
 class Request {
 
 public:
-    Request(
-        const std::string       &uuid,
-        const compr::FileMeta   &meta,
-        const compr::FileChunk  &chunk,
-        const RequestType       type = RequestType::FULL
-    );
-    Request(
-        const std::string       &uuid,
-        const compr::FileMeta   &meta,
-        const RequestType       type = RequestType::META 
-    );
-    Request(
-        const std::string       &uuid,
-        const compr::FileChunk  &chunk,
-        const RequestType       type = RequestType::CHUNK 
-    );
+    Request(std::unique_ptr<PoorRequest> request);
 
-    inline const std::string&      uuid() const;
-    inline const compr::FileMeta&  meta() const;
-    inline const std::vector<compr::FileChunk>& chunks() const;
+    inline const std::string&     uuid() const;
+    inline const compr::FileMeta  meta() const;
+    inline const 
+    std::vector<std::unique_ptr<compr::FileChunk>> chunks() const;
     inline const RequestType type() const;
 
-    inline void add(const compr::FileMeta   &meta);
-    inline void add(const compr::FileChunk  &chunk);
-    template <typename Container>
-    inline void add(const Container& c);
+    inline void add(std::unique_ptr<compr::FileMeta> meta);
+    inline void add(std::unique_ptr<compr::FileChunk> chunk);
 
     inline bool is_ready() const;
 
 private:
-    std::string                     _uuid;
-    compr::FileMeta                 _meta;
-    std::vector<compr::FileChunk>   _chunks;
+    std::string                        _uuid;
+    std::unique_ptr<compr::FileMeta>                _meta;
+    std::vector<std::unique_ptr<compr::FileChunk>>  _chunks;
 
     RequestType         _type;
 };
 
+
+/**
+ * represents singletone queue that keeps requests;
+ * takes PoorRequest;
+ * acquires Request;
+ */
 class RequestQueue {
 public:
-    static RequestQueue& getInstance();
-    std::unique_ptr<Request> acquire();
-    void push(std::unique_ptr<Request> req);
+    static RequestQueue& get_instance();
+    std::shared_ptr<Request> acquire();
+    void push(std::unique_ptr<PoorRequest> req);
 
     inline bool is_empty() const;
     inline size_t size() const;
 
-private: 
-    std::deque<std::unique_ptr<Request>> _deque;
+    void release(std::shared_ptr<Request> req);
+
+    inline observer::Subject& subject();
 
 private:
     RequestQueue();
+    RequestQueue(const RequestQueue&) = delete;
+    RequestQueue& operator=(const RequestQueue&) = delete;
+
+private: 
+    std::deque<std::unique_ptr<Request>> _deque;
+    observer::Subject _subject;
 };
 
 }

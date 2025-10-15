@@ -7,8 +7,16 @@
 #include <grpcpp/grpcpp.h>
 
 #include "CompressorImpl.hpp"
+#include "queue/RequestQueue.hpp"
+#include "observer/observer.hpp"
 
 int main(int argc, char* argv[]) {
+
+    { // Linking observer and subject
+    auto &_queue = requests::RequestQueue::get_instance();
+    auto obs = std::make_shared<observer::QueueObserver>();
+    _queue.subject().attach(obs.get());
+    }
 
     std::string addr{"0.0.0.0:50051"};
     Compressor compressor;

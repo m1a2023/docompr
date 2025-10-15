@@ -11,21 +11,21 @@ message FileMeta {
 }
 
 message FileChunk {
-    optional int32 offset = 1;
-    optional bytes data = 2;
+    int32 offset = 1;
+    bytes data = 2;
 }
 
 message SmallFileRequest {
-    required string uuid;
-    FileMeta meta = 1;
-    FileChunk chunk = 2;
+    string uuid = 1;
+    FileMeta meta = 2;
+    FileChunk chunk = 3;
 }
 
 message FileRequest {
-    required string uuid;
+    string uuid = 1;
     oneof payload {
-        FileMeta meta = 1;
-        FileChunk chunk = 2;
+        FileMeta meta = 2;
+        FileChunk chunk = 3;
     }
 }
 

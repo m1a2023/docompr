@@ -1,6 +1,6 @@
 
 message(${CMAKE_CURRENT_SOURCE_DIR})
-find_package(Boost REQUIRED COMPONENTS iostreams)
+find_package(Boost REQUIRED COMPONENTS iostreams system)
 
 set(SERVER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
@@ -24,6 +24,7 @@ target_link_libraries(server
         proto 
         z
         Boost::iostreams
+        Boost::system
 )
 
 target_include_directories(server PUBLIC
